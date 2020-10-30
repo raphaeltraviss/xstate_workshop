@@ -7,12 +7,12 @@ const machine = createMachine({
   states: {
     'inactive': {
       on: {
-        CLICK_ON: 'active'
+        mousedown: 'active'
       },
     },
     'active': {
       on: {
-        CLICK_OFF: 'inactive'
+        mouseup: 'inactive'
       },
     }
   }
@@ -28,10 +28,7 @@ service.onTransition(state => {
 
 service.start();
 
-elBox.addEventListener('mousedown', (event) => {
-  service.send('CLICK_ON');
-});
+const forward = event => service.send(event);
 
-elBox.addEventListener('mouseup', (event) => {
-  service.send('CLICK_OFF');
-});
+elBox.addEventListener('mousedown', forward);
+elBox.addEventListener('mouseup', forward);
