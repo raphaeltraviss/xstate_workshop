@@ -72,8 +72,8 @@ service.onTransition((state) => {
 
     elBox.dataset.state = state.value;
 
-//    elBox.style.setProperty('--dx', state.context.dx);
- //   elBox.style.setProperty('--dy', state.context.dy);
+    elBox.style.setProperty('--dx', state.context.dx);
+    elBox.style.setProperty('--dy', state.context.dy);
     elBox.style.setProperty('--x', state.context.x);
     elBox.style.setProperty('--y', state.context.y);
   }
