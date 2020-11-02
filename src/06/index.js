@@ -34,6 +34,8 @@ const incrementDrags = assign({
   drags: (ctx, ev) => ctx.drags + 1
 });
 
+const underFiveDrags = (ctx, ev) => ctx.drags < 5;
+
 const resetPosition = assign({
   dx: 0,
   dy: 0,
@@ -58,7 +60,7 @@ const machine = createMachine({
         mousedown: {
           actions: assignPoint,
           target: 'dragging',
-          cond: (ctx, ev) => ctx.drags < 5
+          cond: 'underFiveDrags',
         },
       },
     },
@@ -82,7 +84,10 @@ const machine = createMachine({
 },
 {
   actions: {
-    incrementDrags
+    incrementDrags,
+  },
+  guards: {
+    underFiveDrags,
   }
 });
 
