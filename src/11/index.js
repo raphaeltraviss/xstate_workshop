@@ -14,11 +14,32 @@ const displayMachine = createMachine({
       },
     },
     visible: {
-      // Add parallel states here for:
-      // - mode (light or dark)
-      // - brightness (bright or dim)
-      // See the README for how the child states of each of those
-      // parallel states should transition between each other.
+      type: 'parallel',
+      states: {
+        mode: {
+          initial: 'light',
+          states: {
+            light: {
+              on: { TURN_OFF: 'dark' },
+            },
+            dark: {
+              on: { TURN_ON: 'light' },
+            },
+          }
+        },
+        brightness: {
+          initial: 'bright',
+          states: {
+            bright: {
+              on: { SWITCH: 'dim' },
+              delay: { 5000: 'dim' },
+            },
+            dim: {
+              on: { SWITCH: 'bright' },
+            },
+          }
+        },
+      }
     },
   },
 });
