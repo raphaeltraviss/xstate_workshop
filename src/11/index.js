@@ -18,13 +18,13 @@ const displayMachine = createMachine({
       states: {
         mode: {
           initial: 'light',
+          on: {
+            TURN_OFF: 'mode.dark',
+            TURN_ON: 'mode.light',
+          },
           states: {
-            light: {
-              on: { TURN_OFF: 'dark' },
-            },
-            dark: {
-              on: { TURN_ON: 'light' },
-            },
+            light: {},
+            dark: {},
           }
         },
         brightness: {
@@ -32,15 +32,15 @@ const displayMachine = createMachine({
           states: {
             bright: {
               on: {
+                SWITCH: 'dim',
                 TURN_OFF: 'dim',
-                SWITCH: 'dim'
               },
-              after: { 2000: 'dim' },
+              after: { 1000: 'dim' },
             },
             dim: {
               on: {
-                TURN_OFF: 'dim',
                 SWITCH: 'bright',
+                TURN_OFF: 'dim',
               },
             },
           }
