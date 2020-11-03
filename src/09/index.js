@@ -21,10 +21,13 @@ const assignPosition = assign({
   py: 0,
 });
 
-const assignDelta = assign({
+const assignDeltaX = assign({
   dx: (context, event) => {
     return event.clientX - context.px;
   },
+});
+
+const assignDeltaY = assign({
   dy: (context, event) => {
     return event.clientY - context.py;
   },
@@ -57,16 +60,26 @@ const dragDropMachine = createMachine({
       },
     },
     dragging: {
-      // Add hierarchical (nested) states here.
-      // We should have a state for normal operation
-      // that transitions to a "locked" x-axis behavior
-      // when the shift key is pressed.
-      // ...
-      on: {
-        mousemove: {
-          actions: assignDelta,
-          internal: false,
+      initial: 'xy',
+      states: {
+        xy: {
+          on: {
+            mousemove: {
+              actions: [assignDeltaX, assignDeltaY],
+              internal: false,
+            },
+          }
         },
+        x: {
+          on: {
+            mousemove: {
+              actions: [assignDeltaX],
+              internal: false,
+            },
+          }
+        },
+      },
+      on: {
         mouseup: {
           actions: [assignPosition],
           target: 'idle',
@@ -75,6 +88,8 @@ const dragDropMachine = createMachine({
           target: 'idle',
           actions: resetPosition,
         },
+        'keydown.shift': 'dragging.x',
+        'keyup.shift': 'dragging.xy',
       },
     },
   },
@@ -113,6 +128,13 @@ elBody.addEventListener('keyup', (e) => {
   }
 });
 
-// Add event listeners for keyup and keydown on the body
-// to listen for the 'Shift' key.
-// ...
+elBody.addEventListener('keydown', (e) => {
+  if (e.key === 'Shift') {
+    service.send('keydown.shift');
+  }
+});
+elBody.addEventListener('keyup', (e) => {
+  if (e.key === 'Shift') {
+    service.send('keyup.shift');
+  }
+});
