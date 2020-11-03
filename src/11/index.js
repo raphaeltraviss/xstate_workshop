@@ -28,14 +28,20 @@ const displayMachine = createMachine({
           }
         },
         brightness: {
-          initial: 'bright',
+          initial: 'dim',
           states: {
             bright: {
-              on: { SWITCH: 'dim' },
-              delay: { 5000: 'dim' },
+              on: {
+                TURN_OFF: 'dim',
+                SWITCH: 'dim'
+              },
+              after: { 2000: 'dim' },
             },
             dim: {
-              on: { SWITCH: 'bright' },
+              on: {
+                TURN_OFF: 'dim',
+                SWITCH: 'bright',
+              },
             },
           }
         },
